@@ -1,0 +1,74 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="jumbotron">
+    <h2>This is your magic Roman to Arabic Numeral calculator</h2>
+    Just enter a Roman numeral, and we will convert it to an Arabic numeral for you!
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#btnCalc').on('click', function () {
+            try {
+                $.ajax({
+                    url: '@Url.Action("Calculate", "Home")',
+                    data: { roNum: $('#roman').val() },
+                    dataType: 'json',
+                    global: false,
+                    success: function (data) {
+                        var mess = '';
+                        if (data < 0) {
+                            switch (data) {
+                                case -1:
+                                    mess = 'Data contained invalid numerals';
+                                    break;
+                                case -2:
+                                    mess = 'Your ordering is wrong - this would generate a negative';
+                                    break;
+                            }
+                            alert(mess);
+                        }
+                            else
+                        $('#arabic').val(data);
+                    },
+                    error: function (jqXHR) {
+                        $("html").html(jqXHR.responseText);
+                    }
+
+                });
+            }
+            catch (ex) {
+                alert(ex.toString());
+            }
+        });
+    });
+</script>
+
+<div>
+    <ol class="regularDisp">
+        <li>
+            <ul class="dispInline">
+                <li>
+                    Roman numeral:*
+                </li>
+                <li>
+                    <input type="text" id="roman" />
+                </li>
+                <li>
+                    <input type="button" value="Convert" id="btnCalc" />
+                </li>
+            </ul>
+        </li>
+        <li>
+            <ul class="dispInline">
+                <li>
+                    Arablic numeral:
+                </li>
+                <li>
+                    <input type="text" id="arabic" />
+                </li>
+            </ul>
+        </li>
+    </ol>
+    *Don't worry about case sensitivity, I'll take care of it
+</div>
